@@ -34,7 +34,7 @@ func PrintDay(day string, dayFunc func()) {
 		r.Sprint("*"),
 	}
 
-	fmt.Printf("%s\n", strings.Join(res, " "))
+	fmt.Printf("\n%s\n", strings.Join(res, " "))
 	dayFunc()
 }
 
