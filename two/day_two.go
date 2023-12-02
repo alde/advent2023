@@ -13,15 +13,15 @@ type Cubes struct {
 	Blue  int
 }
 
-func (c *Cubes) Add(color string, amount int) {
-	if color == "red" {
-		c.Red += amount
+func (c *Cubes) Add(hand *Hand) {
+	if hand.Color == "red" {
+		c.Red += hand.Amount
 	}
-	if color == "blue" {
-		c.Blue += amount
+	if hand.Color == "blue" {
+		c.Blue += hand.Amount
 	}
-	if color == "green" {
-		c.Green += amount
+	if hand.Color == "green" {
+		c.Green += hand.Amount
 	}
 }
 
@@ -30,14 +30,30 @@ type Hand struct {
 	Amount int
 }
 
+func NewHand(s string) *Hand {
+	hand := &Hand{}
+	split := strings.Split(s, " ")
+	amount, _ := strconv.Atoi(split[0])
+	hand.Amount = amount
+	color := split[len(split)-1]
+	hand.Color = color
+	return hand
+}
+
+func makeHands(round string) []*Hand {
+	res := []*Hand{}
+	for _, hand := range strings.Split(round, ", ") {
+		res = append(res, NewHand(hand))
+	}
+
+	return res
+}
+
 func isValidRound(round string, cubesAvailable *Cubes) bool {
 	cubesInRound := &Cubes{}
-	for _, hand := range strings.Split(round, ", ") {
-		h := strings.Split(hand, " ")
-		amount, _ := strconv.Atoi(h[0])
-		color := h[len(h)-1]
-
-		cubesInRound.Add(color, amount)
+	hands := makeHands(round)
+	for _, hand := range hands {
+		cubesInRound.Add(hand)
 	}
 
 	if cubesInRound.Blue > cubesAvailable.Blue {
@@ -57,17 +73,18 @@ func PartOne(input []string, cubes *Cubes) *shared.Result[int] {
 	result := 0
 	for _, game := range input {
 		record := strings.Split(game, ": ")
-		if len(record) == 1 {
+		if len(record) <= 1 {
 			continue
 		}
 		gameId, _ := strconv.Atoi(strings.Split(record[0], " ")[1])
 		allRoundsValid := true
 		for _, round := range strings.Split(record[1], "; ") {
-			isValid := isValidRound(round, cubes)
-			if !isValid {
+			if !isValidRound(round, cubes) {
 				allRoundsValid = false
+				break
 			}
 		}
+
 		if allRoundsValid {
 			result += gameId
 		}
@@ -75,32 +92,32 @@ func PartOne(input []string, cubes *Cubes) *shared.Result[int] {
 	}
 	return &shared.Result[int]{Day: "Two", Task: "One", Value: result}
 }
+
 func minReqForGame(game string) *Cubes {
 	minCubes := &Cubes{}
 	for _, round := range strings.Split(game, "; ") {
-		for _, hand := range strings.Split(round, ", ") {
-			h := strings.Split(hand, " ")
-			amount, _ := strconv.Atoi(h[0])
-			color := h[len(h)-1]
-			if color == "red" && amount >= minCubes.Red {
-				minCubes.Red = amount
+		hands := makeHands(round)
+		for _, hand := range hands {
+			if hand.Color == "red" && hand.Amount >= minCubes.Red {
+				minCubes.Red = hand.Amount
 			}
-			if color == "green" && amount >= minCubes.Green {
-				minCubes.Green = amount
+			if hand.Color == "green" && hand.Amount >= minCubes.Green {
+				minCubes.Green = hand.Amount
 			}
-			if color == "blue" && amount >= minCubes.Blue {
-				minCubes.Blue = amount
+			if hand.Color == "blue" && hand.Amount >= minCubes.Blue {
+				minCubes.Blue = hand.Amount
 			}
 		}
 	}
 
 	return minCubes
 }
+
 func PartTwo(input []string) *shared.Result[int] {
 	result := 0
 	for _, game := range input {
 		record := strings.Split(game, ": ")
-		if len(record) == 1 {
+		if len(record) <= 1 {
 			continue
 		}
 		reqCubes := minReqForGame(record[1])
