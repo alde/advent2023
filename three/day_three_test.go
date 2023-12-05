@@ -26,7 +26,11 @@ func Test_PartOne(t *testing.T) {
 
 	assert.Equal(t, 4361, res.Value)
 }
+func Test_PartTwo(t *testing.T) {
+	res := three.PartTwo(INPUT)
 
+	assert.Equal(t, 467835, res.Value)
+}
 func Test_CheckMatrix(t *testing.T) {
 	testData := []struct {
 		inputString []string
@@ -44,6 +48,23 @@ func Test_CheckMatrix(t *testing.T) {
 	}
 
 	assert.Equal(t, []int{467, 35, 633, 617, 592, 755, 664, 598}, three.CheckMatrix(INPUT))
+}
+
+func Test_CheckForGears(t *testing.T) {
+	testData := []struct {
+		inputString []string
+		expected    []int
+	}{
+		{inputString: []string{"123...", "..*...", "456..."}, expected: []int{123 * 456}},
+	}
+
+	for _, td := range testData {
+		t.Run(fmt.Sprintf("test for %v", td.inputString), func(t *testing.T) {
+			assert.Equal(t, td.expected, three.CheckForGrears(td.inputString))
+		})
+	}
+
+	assert.Equal(t, []int{16345, 451490}, three.CheckForGrears(INPUT))
 }
 
 func Test_IsDigit(t *testing.T) {
