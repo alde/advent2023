@@ -82,36 +82,38 @@ func Test_ProcessInput(t *testing.T) {
 }
 
 func Test_Reverse(t *testing.T) {
-	actual := five.ProcessInputPartTwo(INPUT)
+	actual := five.ProcessInput(INPUT)
 
 	assert.Equal(t, actual.SeedListRange, []five.SeedRange{{79, 14}, {55, 13}})
 
 	testData := []struct {
-		seed int
-		path []int
+		actual   int
+		location int
 	}{
-		{seed: 79, path: []int{79, 81, 81, 81, 74, 78, 78, 82}},
-		{seed: 14, path: []int{14, 14, 53, 49, 42, 42, 43, 43}},
-		{seed: 55, path: []int{55, 57, 57, 53, 46, 82, 82, 86}},
-		{seed: 13, path: []int{13, 13, 52, 41, 34, 34, 35, 35}},
+		{actual: 79, location: 82},
+		{actual: 14, location: 43},
+		{actual: 55, location: 86},
+		{actual: 13, location: 35},
 	}
 
 	for i, td := range testData {
 		t.Run(fmt.Sprintf("test case %d", i), func(t *testing.T) {
-			path := actual.ResolveMappings(td.seed)
-			assert.Equal(t, td.path[len(td.path)-1], path)
+			seed := actual.Reverse(td.location)
+			assert.Equal(t, td.actual, seed)
 		})
 	}
 }
 
 func Test_PartOne(t *testing.T) {
-	res := five.PartOne(INPUT)
+	almanac := five.ProcessInput(INPUT)
+	res := five.PartOne(almanac)
 
 	assert.Equal(t, 35, res.Value)
 }
 
 func Test_PartTwo(t *testing.T) {
-	res := five.PartTwo(INPUT)
+	almanac := five.ProcessInput(INPUT)
+	res := five.PartTwo(almanac)
 
 	assert.Equal(t, 46, res.Value)
 }

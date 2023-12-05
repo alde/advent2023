@@ -65,48 +65,33 @@ func (m *Map) Reverse(from int) int {
 	return from
 }
 
-type Almanac struct {
-	SeedList              []int
-	SeedToSoil            *Map
-	SoilToFertilizer      *Map
-	FertilizerToWater     *Map
-	WaterToLight          *Map
-	LightToTemperature    *Map
-	TemperatureToHumidity *Map
-	HumidityToLocation    *Map
-}
-
-func (a *Almanac) ResolveMappings(seed int) []int {
-	soil := a.SeedToSoil.Get(seed)
-	fertilizer := a.SoilToFertilizer.Get(soil)
-	water := a.FertilizerToWater.Get(fertilizer)
-	light := a.WaterToLight.Get(water)
-	temp := a.LightToTemperature.Get(light)
-	hum := a.TemperatureToHumidity.Get(temp)
-	loc := a.HumidityToLocation.Get(hum)
-
-	return []int{
-		seed, soil, fertilizer, water, light, temp, hum, loc,
-	}
-}
-
 type SeedRange struct {
 	Start  int
 	Length int
 }
 
-type AlmanacTwo struct {
-	SeedListRange         []SeedRange
-	SeedToSoil            *Map
-	SoilToFertilizer      *Map
-	FertilizerToWater     *Map
-	WaterToLight          *Map
-	LightToTemperature    *Map
-	TemperatureToHumidity *Map
-	HumidityToLocation    *Map
+type Almanac struct {
+	SeedList      []int
+	SeedListRange []SeedRange
+	Dict          map[string]*Map
 }
 
-func (a *AlmanacTwo) HasRangeContainingSeed(seed int) bool {
+func (a *Almanac) ResolveMappings(seed int) []int {
+
+	soil := a.Dict["seed-to-soil"].Get(seed)
+	fertilizer := a.Dict["soil-to-fertilizer"].Get(soil)
+	water := a.Dict["fertilizer-to-water"].Get(fertilizer)
+	light := a.Dict["water-to-light"].Get(water)
+	temperature := a.Dict["light-to-temperature"].Get(light)
+	humidity := a.Dict["temperature-to-humidity"].Get(temperature)
+	location := a.Dict["humidity-to-location"].Get(humidity)
+
+	return []int{
+		seed, soil, fertilizer, water, light, temperature, humidity, location,
+	}
+}
+
+func (a *Almanac) HasRangeContainingSeed(seed int) bool {
 	for _, r := range a.SeedListRange {
 		if seed >= r.Start && seed <= r.Start+r.Length {
 			return true
@@ -114,27 +99,16 @@ func (a *AlmanacTwo) HasRangeContainingSeed(seed int) bool {
 	}
 	return false
 }
-func (a *AlmanacTwo) Reverse(location int) int {
-	humidity := a.HumidityToLocation.Reverse(location)
-	temp := a.TemperatureToHumidity.Reverse(humidity)
-	light := a.LightToTemperature.Reverse(temp)
-	water := a.WaterToLight.Reverse(light)
-	fertilizer := a.FertilizerToWater.Reverse(water)
-	soil := a.SoilToFertilizer.Reverse(fertilizer)
-	seed := a.SeedToSoil.Reverse(soil)
+func (a *Almanac) Reverse(location int) int {
+	humidity := a.Dict["humidity-to-location"].Reverse(location)
+	temp := a.Dict["temperature-to-humidity"].Reverse(humidity)
+	light := a.Dict["light-to-temperature"].Reverse(temp)
+	water := a.Dict["water-to-light"].Reverse(light)
+	fertilizer := a.Dict["fertilizer-to-water"].Reverse(water)
+	soil := a.Dict["soil-to-fertilizer"].Reverse(fertilizer)
+	seed := a.Dict["seed-to-soil"].Reverse(soil)
 
 	return seed
-}
-func (a *AlmanacTwo) ResolveMappings(seed int) int {
-	soil := a.SeedToSoil.Get(seed)
-	fertilizer := a.SoilToFertilizer.Get(soil)
-	water := a.FertilizerToWater.Get(fertilizer)
-	light := a.WaterToLight.Get(water)
-	temp := a.LightToTemperature.Get(light)
-	hum := a.TemperatureToHumidity.Get(temp)
-	loc := a.HumidityToLocation.Get(hum)
-
-	return loc
 }
 
 func findEndOfBlock(slice []string, startIndex int) int {
@@ -146,42 +120,27 @@ func findEndOfBlock(slice []string, startIndex int) int {
 	return len(slice)
 }
 
-func ProcessInput(input []string) Almanac {
-	almanac := Almanac{}
-	almanac.SeedList = shared.ConvertToNumSlice(strings.TrimLeft(input[0], "seeds: "))
+func makeMaps(input []string) map[string]*Map {
+	result := make(map[string]*Map)
+
 	for n := 1; n < len(input); n++ {
 		endIndex := n
 		section := ""
 		if strings.HasSuffix(input[n], " map:") {
 			endIndex = findEndOfBlock(input, n)
 			section = strings.TrimRight(input[n], " map:")
-
 			m := MakeMap(input[n+1 : endIndex])
-			switch section {
-			case "seed-to-soil":
-				almanac.SeedToSoil = m
-			case "soil-to-fertilizer":
-				almanac.SoilToFertilizer = m
-			case "fertilizer-to-water":
-				almanac.FertilizerToWater = m
-			case "water-to-light":
-				almanac.WaterToLight = m
-			case "light-to-temperature":
-				almanac.LightToTemperature = m
-			case "temperature-to-humidity":
-				almanac.TemperatureToHumidity = m
-			case "humidity-to-location":
-				almanac.HumidityToLocation = m
-			}
+			result[section] = m
 		}
 		n = endIndex
 	}
-	return almanac
+	return result
 }
 
-func ProcessInputPartTwo(input []string) AlmanacTwo {
-	almanac := AlmanacTwo{}
+func ProcessInput(input []string) *Almanac {
+	almanac := &Almanac{}
 	seedList := shared.ConvertToNumSlice(strings.TrimLeft(input[0], "seeds: "))
+	almanac.SeedList = seedList
 	seedRanges := []SeedRange{}
 	for i := 0; i < len(seedList); i += 2 {
 		seedRanges = append(seedRanges, SeedRange{
@@ -191,33 +150,8 @@ func ProcessInputPartTwo(input []string) AlmanacTwo {
 	}
 	almanac.SeedListRange = seedRanges
 
-	for n := 1; n < len(input); n++ {
-		endIndex := n
-		section := ""
-		if strings.HasSuffix(input[n], " map:") {
-			endIndex = findEndOfBlock(input, n)
-			section = strings.TrimRight(input[n], " map:")
+	almanac.Dict = makeMaps(input)
 
-			m := MakeMap(input[n+1 : endIndex])
-			switch section {
-			case "seed-to-soil":
-				almanac.SeedToSoil = m
-			case "soil-to-fertilizer":
-				almanac.SoilToFertilizer = m
-			case "fertilizer-to-water":
-				almanac.FertilizerToWater = m
-			case "water-to-light":
-				almanac.WaterToLight = m
-			case "light-to-temperature":
-				almanac.LightToTemperature = m
-			case "temperature-to-humidity":
-				almanac.TemperatureToHumidity = m
-			case "humidity-to-location":
-				almanac.HumidityToLocation = m
-			}
-		}
-		n = endIndex
-	}
 	return almanac
 }
 
@@ -235,9 +169,9 @@ func MakeMap(input []string) *Map {
 	return result
 }
 
-func PartOne(input []string) *shared.Result {
+func PartOne(almanac *Almanac) *shared.Result {
 	result := 0
-	almanac := ProcessInput(input)
+
 	for _, seed := range almanac.SeedList {
 		path := almanac.ResolveMappings(seed)
 		location := path[len(path)-1]
@@ -248,9 +182,8 @@ func PartOne(input []string) *shared.Result {
 	return &shared.Result{Day: "Five", Task: "One", Value: result}
 }
 
-func PartTwo(input []string) *shared.Result {
+func PartTwo(almanac *Almanac) *shared.Result {
 	result := math.MaxInt
-	almanac := ProcessInputPartTwo(input)
 
 	for loc := 0; loc < 200_000_000; loc++ {
 		seed := almanac.Reverse(loc)
@@ -265,7 +198,8 @@ func PartTwo(input []string) *shared.Result {
 
 func Run(input string) {
 	data := shared.LoadInputAsStringSlice(input)
+	almanac := ProcessInput(data)
 
-	shared.PrintResult(func() *shared.Result { return PartOne(data) })
-	shared.PrintResult(func() *shared.Result { return PartTwo(data) })
+	shared.PrintResult(func() *shared.Result { return PartOne(almanac) })
+	shared.PrintResult(func() *shared.Result { return PartTwo(almanac) })
 }
