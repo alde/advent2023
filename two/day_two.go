@@ -69,7 +69,7 @@ func isValidRound(round string, cubesAvailable *Cubes) bool {
 	return true
 }
 
-func PartOne(input []string, cubes *Cubes) *shared.Result[int] {
+func PartOne(input []string, cubes *Cubes) *shared.Result {
 	result := 0
 	for _, game := range input {
 		record := strings.Split(game, ": ")
@@ -90,7 +90,7 @@ func PartOne(input []string, cubes *Cubes) *shared.Result[int] {
 		}
 
 	}
-	return &shared.Result[int]{Day: "Two", Task: "One", Value: result}
+	return &shared.Result{Day: "Two", Task: "One", Value: result}
 }
 
 func minReqForGame(game string) *Cubes {
@@ -113,7 +113,7 @@ func minReqForGame(game string) *Cubes {
 	return minCubes
 }
 
-func PartTwo(input []string) *shared.Result[int] {
+func PartTwo(input []string) *shared.Result {
 	result := 0
 	for _, game := range input {
 		record := strings.Split(game, ": ")
@@ -125,12 +125,12 @@ func PartTwo(input []string) *shared.Result[int] {
 		result += reqCubes.Red * reqCubes.Green * reqCubes.Blue
 
 	}
-	return &shared.Result[int]{Day: "Two", Task: "Two", Value: result}
+	return &shared.Result{Day: "Two", Task: "Two", Value: result}
 }
 
 func Run(input string) {
-	data := shared.LoadInput(input)
+	data := shared.LoadInputAsStringSlice(input)
 
-	shared.PrintResult(PartOne(strings.Split(data, "\n"), &Cubes{Red: 12, Green: 13, Blue: 14}))
-	shared.PrintResult(PartTwo(strings.Split(data, "\n")))
+	shared.PrintResult(func() *shared.Result { return PartOne(data, &Cubes{Red: 12, Green: 13, Blue: 14}) })
+	shared.PrintResult(func() *shared.Result { return PartTwo(data) })
 }

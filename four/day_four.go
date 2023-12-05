@@ -98,16 +98,16 @@ func countCards(cards []*Card, cardMap map[int]*Card, counter int) int {
 	return counter
 }
 
-func PartOne(input []string) *shared.Result[int] {
+func PartOne(input []string) *shared.Result {
 	cards := makeCards(input)
 	result := 0
 	for _, c := range cards {
 		result += calculatePoints(c)
 	}
-	return &shared.Result[int]{Day: "Four", Task: "One", Value: result}
+	return &shared.Result{Day: "Four", Task: "One", Value: result}
 }
 
-func PartTwo(input []string) *shared.Result[int] {
+func PartTwo(input []string) *shared.Result {
 	cards := makeCards(input)
 	cardMap := make(map[int]*Card)
 	for _, card := range cards {
@@ -116,13 +116,12 @@ func PartTwo(input []string) *shared.Result[int] {
 
 	result := countCards(cards, cardMap, 0)
 
-	return &shared.Result[int]{Day: "Four", Task: "Two", Value: result}
+	return &shared.Result{Day: "Four", Task: "Two", Value: result}
 }
 
 func Run(input string) {
-	data := shared.LoadInput(input)
+	data := shared.LoadInputAsStringSlice(input)
 
-	shared.PrintResult(PartOne(strings.Split(data, "\n")))
-	shared.PrintResult(PartTwo(strings.Split(data, "\n")))
-
+	shared.PrintResult(func() *shared.Result { return PartOne(data) })
+	shared.PrintResult(func() *shared.Result { return PartTwo(data) })
 }

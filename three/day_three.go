@@ -2,7 +2,6 @@ package three
 
 import (
 	"strconv"
-	"strings"
 
 	"alde.nu/advent2023/shared"
 )
@@ -132,25 +131,25 @@ func CheckForGrears(matrix []string) []int {
 	return gearRatios
 }
 
-func PartOne(input []string) *shared.Result[int] {
+func PartOne(input []string) *shared.Result {
 	result := 0
 	for _, i := range CheckMatrix(input) {
 		result += i
 	}
-	return &shared.Result[int]{Day: "Three", Task: "One", Value: result}
+	return &shared.Result{Day: "Three", Task: "One", Value: result}
 }
 
-func PartTwo(input []string) *shared.Result[int] {
+func PartTwo(input []string) *shared.Result {
 	result := 0
 	for _, i := range CheckForGrears(input) {
 		result += i
 	}
-	return &shared.Result[int]{Day: "Three", Task: "Two", Value: result}
+	return &shared.Result{Day: "Three", Task: "Two", Value: result}
 }
 
 func Run(input string) {
-	data := shared.LoadInput(input)
+	data := shared.LoadInputAsStringSlice(input)
 
-	shared.PrintResult(PartOne(strings.Split(data, "\n")))
-	shared.PrintResult(PartTwo(strings.Split(data, "\n")))
+	shared.PrintResult(func() *shared.Result { return PartOne(data) })
+	shared.PrintResult(func() *shared.Result { return PartTwo(data) })
 }
