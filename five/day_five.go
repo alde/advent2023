@@ -76,7 +76,7 @@ type Almanac struct {
 	Dict          map[string]*Map
 }
 
-func (a *Almanac) ResolveMappings(seed int) []int {
+func (a *Almanac) Traverse(seed int) int {
 
 	soil := a.Dict["seed-to-soil"].Get(seed)
 	fertilizer := a.Dict["soil-to-fertilizer"].Get(soil)
@@ -86,9 +86,7 @@ func (a *Almanac) ResolveMappings(seed int) []int {
 	humidity := a.Dict["temperature-to-humidity"].Get(temperature)
 	location := a.Dict["humidity-to-location"].Get(humidity)
 
-	return []int{
-		seed, soil, fertilizer, water, light, temperature, humidity, location,
-	}
+	return location
 }
 
 func (a *Almanac) HasRangeContainingSeed(seed int) bool {
@@ -99,6 +97,7 @@ func (a *Almanac) HasRangeContainingSeed(seed int) bool {
 	}
 	return false
 }
+
 func (a *Almanac) Reverse(location int) int {
 	humidity := a.Dict["humidity-to-location"].Reverse(location)
 	temp := a.Dict["temperature-to-humidity"].Reverse(humidity)
@@ -173,8 +172,7 @@ func PartOne(almanac *Almanac) *shared.Result {
 	result := 0
 
 	for _, seed := range almanac.SeedList {
-		path := almanac.ResolveMappings(seed)
-		location := path[len(path)-1]
+		location := almanac.Traverse(seed)
 		if result == 0 || location < result {
 			result = location
 		}
