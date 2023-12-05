@@ -2,8 +2,18 @@ package shared
 
 import (
 	"strconv"
+	"strings"
 	"unicode"
 )
+
+func ConvertToNumSlice(s string) []int {
+	res := []int{}
+	for _, wn := range strings.Fields(s) {
+		wn1, _ := strconv.Atoi(wn)
+		res = append(res, wn1)
+	}
+	return res
+}
 
 func ExtractNumbers(s string) []int {
 	var res = []int{}
