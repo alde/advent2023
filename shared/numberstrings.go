@@ -9,7 +9,10 @@ import (
 func ConvertToNumSlice(s string) []int {
 	res := []int{}
 	for _, wn := range strings.Fields(s) {
-		wn1, _ := strconv.Atoi(wn)
+		wn1, err := strconv.Atoi(wn)
+		if err != nil {
+			continue
+		}
 		res = append(res, wn1)
 	}
 	return res

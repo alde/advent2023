@@ -7,6 +7,7 @@ import (
 	"alde.nu/advent2023/four"
 	"alde.nu/advent2023/one"
 	"alde.nu/advent2023/shared"
+	"alde.nu/advent2023/six"
 	"alde.nu/advent2023/three"
 	"alde.nu/advent2023/two"
 )
@@ -30,5 +31,8 @@ func main() {
 	}
 	if *target == "all" || *target == "five" {
 		shared.PrintDay("five", func() { five.Run("inputs/FIVE.txt") })
+	}
+	if *target == "all" || *target == "six" {
+		shared.PrintDay("six", func() { six.Run("inputs/SIX.txt") })
 	}
 }
