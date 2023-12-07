@@ -3,7 +3,7 @@ package four_test
 import (
 	"testing"
 
-	"alde.nu/advent2023/four"
+	four "alde.nu/advent2023/day_4"
 	"github.com/stretchr/testify/assert"
 )
 

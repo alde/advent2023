@@ -3,13 +3,13 @@ package main
 import (
 	"flag"
 
-	"alde.nu/advent2023/five"
-	"alde.nu/advent2023/four"
-	"alde.nu/advent2023/one"
+	one "alde.nu/advent2023/day_1"
+	two "alde.nu/advent2023/day_2"
+	three "alde.nu/advent2023/day_3"
+	four "alde.nu/advent2023/day_4"
+	five "alde.nu/advent2023/day_5"
+	six "alde.nu/advent2023/day_6"
 	"alde.nu/advent2023/shared"
-	"alde.nu/advent2023/six"
-	"alde.nu/advent2023/three"
-	"alde.nu/advent2023/two"
 )
 
 func main() {

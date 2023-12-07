@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"alde.nu/advent2023/one"
+	one "alde.nu/advent2023/day_1"
 	"github.com/stretchr/testify/assert"
 )
 

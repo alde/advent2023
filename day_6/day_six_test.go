@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"alde.nu/advent2023/six"
+	six "alde.nu/advent2023/day_6"
 	"github.com/stretchr/testify/assert"
 )
 

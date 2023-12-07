@@ -3,7 +3,7 @@ package two_test
 import (
 	"testing"
 
-	"alde.nu/advent2023/two"
+	two "alde.nu/advent2023/day_2"
 	"github.com/stretchr/testify/assert"
 )
 
