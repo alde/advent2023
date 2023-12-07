@@ -9,6 +9,7 @@ import (
 	four "alde.nu/advent2023/day_4"
 	five "alde.nu/advent2023/day_5"
 	six "alde.nu/advent2023/day_6"
+	seven "alde.nu/advent2023/day_7"
 	"alde.nu/advent2023/shared"
 )
 
@@ -34,5 +35,8 @@ func main() {
 	}
 	if *target == "all" || *target == "six" {
 		shared.PrintDay("six", func() { six.Run("inputs/SIX.txt") })
+	}
+	if *target == "all" || *target == "seven" {
+		shared.PrintDay("seven", func() { seven.Run("inputs/SEVEN.txt") })
 	}
 }
