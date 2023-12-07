@@ -16,9 +16,15 @@ type Hand struct {
 }
 type Hands []*Hand
 
-var cardPriority = []string{
+var defultPriority = []string{
 	"A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2",
 }
+var cardPrioJackWild = []string{
+	"A", "K", "Q", "T", "9", "8", "7", "6", "5", "4", "3", "2", "J",
+}
+var cardPriority = defultPriority
+
+var JacksAreWild = false
 
 func CompareCards(left string, right string) bool {
 	lp := -1
@@ -80,8 +86,64 @@ func Max(seen map[string]int) int {
 	}
 	return max
 }
+func GetStrengthForWildJacks(cards string) (str int) {
+	seen := CountCards(cards)
+	jacks, ok := seen["J"]
+	if !ok {
+		jacks = 0
+	}
 
-func GetStrength(cards string) int {
+	// fmt.Printf("cards %s contains %d jacks who are wildcards\n", cards, jacks)
+
+	seenLength := len(seen)
+	if seenLength == 1 {
+		return FIVE_OF_A_KIND
+	}
+
+	if seenLength == 2 {
+		if jacks > 0 {
+			return FIVE_OF_A_KIND
+		}
+		if Max(seen) == 3 {
+			return FULL_HOUSE
+		}
+
+		return FOUR_OF_A_KIND
+	}
+
+	if seenLength == 3 {
+		if jacks == 1 {
+			if Max(seen) == 3 {
+				return FOUR_OF_A_KIND // 3 of something, 1 of something else, 1 jack, eg AAAJT
+			}
+			return FULL_HOUSE // 2 of something, 1 jack, 2 of something else, eg AAJTT
+		}
+		if jacks == 2 || jacks == 3 {
+			// 2 of something, 1 of something else, 2 jacks
+			// 3 jacks, 1 of something, 1 of something else
+			return FOUR_OF_A_KIND
+		}
+
+		if Max(seen) == 3 {
+			// it's not 1 or 2 jacks, so 3 of something, 2 of something else but different and no jacks
+			return THREE_OF_A_KIND
+		}
+		return TWO_PAIRS // it's not one or two jacks (as per above)
+	}
+
+	if seenLength == 4 {
+		if jacks > 0 {
+			return THREE_OF_A_KIND // 2 of something and one jack
+		}
+		return ONE_PAIR // has to be a pair of jacks or no jacks
+	}
+	if jacks > 0 {
+		return ONE_PAIR // One jack means it has to be a pair
+	}
+	return HIGH_CARD
+}
+
+func CountCards(cards string) map[string]int {
 	seen := make(map[string]int)
 	for i := 0; i < len(cards); i++ {
 		r := string(cards[i])
@@ -93,10 +155,37 @@ func GetStrength(cards string) int {
 		}
 	}
 
-	if len(seen) == 1 {
+	return seen
+}
+
+func StrengthName(i int) string {
+	switch i {
+	case HIGH_CARD:
+		return "HIGH_CARD"
+	case ONE_PAIR:
+		return "ONE_PAIR"
+	case TWO_PAIRS:
+		return "TWO_PAIRS"
+	case THREE_OF_A_KIND:
+		return "THREE_OF_A_KIND"
+	case FULL_HOUSE:
+		return "FULL_HOUSE"
+	case FOUR_OF_A_KIND:
+		return "FOUR_OF_A_KIND"
+	case FIVE_OF_A_KIND:
+		return "FIVE_OF_A_KIND"
+	}
+	return "unknown"
+}
+
+func getNormalStrength(cards string) int {
+	seen := CountCards(cards)
+
+	seenLength := len(seen)
+	if seenLength == 1 {
 		return FIVE_OF_A_KIND
 	}
-	if len(seen) == 2 { // four of a kind or full house
+	if seenLength == 2 { // four of a kind or full house
 		if Max(seen) == 4 {
 			return FOUR_OF_A_KIND
 		}
@@ -104,18 +193,27 @@ func GetStrength(cards string) int {
 
 	}
 
-	if len(seen) == 3 { // two pairs or three of a kind
+	if seenLength == 3 { // two pairs or three of a kind
 		if Max(seen) == 3 {
 			return THREE_OF_A_KIND
 		}
 		return TWO_PAIRS
 	}
 
-	if len(seen) == 4 { // only one pair
+	if seenLength == 4 { // only one pair
 		return ONE_PAIR
 	}
 
 	return HIGH_CARD
+}
+func GetStrength(cards string) int {
+	str := -1
+	if JacksAreWild {
+		str = GetStrengthForWildJacks(cards)
+	} else {
+		str = getNormalStrength(cards)
+	}
+	return str
 }
 
 func ParseHands(input []string) []*Hand {
@@ -139,8 +237,11 @@ func ParseHands(input []string) []*Hand {
 	return hands
 }
 
-func PartOne(hands Hands) *shared.Result {
+func PartOne(data []string) *shared.Result {
+	JacksAreWild = false
+	hands := ParseHands(data)
 	result := 0
+
 	for _, h := range hands {
 		result += h.Rank * h.Bid
 	}
@@ -148,7 +249,16 @@ func PartOne(hands Hands) *shared.Result {
 }
 
 func PartTwo(data []string) *shared.Result {
+	JacksAreWild = true
+	cardPriority = cardPrioJackWild
+
+	hands := ParseHands(data)
+
 	result := 0
+	for _, h := range hands {
+		// fmt.Printf("hand %+v\n", h)
+		result += h.Rank * h.Bid
+	}
 
 	return &shared.Result{Day: "Seven", Task: "Two", Value: result}
 }
@@ -156,8 +266,6 @@ func PartTwo(data []string) *shared.Result {
 func Run(input string) {
 	data := shared.LoadInputAsStringSlice(input)
 
-	hands := ParseHands(data)
-
-	shared.PrintResult(func() *shared.Result { return PartOne(hands) })
+	shared.PrintResult(func() *shared.Result { return PartOne(data) })
 	shared.PrintResult(func() *shared.Result { return PartTwo(data) })
 }

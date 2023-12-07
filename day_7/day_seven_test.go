@@ -1,6 +1,7 @@
 package seven_test
 
 import (
+	"fmt"
 	"testing"
 
 	seven "alde.nu/advent2023/day_7"
@@ -23,6 +24,38 @@ func Test_GetStrength(t *testing.T) {
 	assert.Equal(t, seven.THREE_OF_A_KIND, seven.GetStrength("QQQJA"))
 }
 
+func Test_GetStrengthForWildJacks(t *testing.T) {
+	testData := []struct {
+		strength int
+		hand     string
+	}{
+		{seven.HIGH_CARD, "12345"},
+		{seven.HIGH_CARD, "AKQT9"},
+		{seven.ONE_PAIR, "12344"},
+		{seven.ONE_PAIR, "AKQJT"},
+		{seven.TWO_PAIRS, "AAKKQ"},
+		{seven.THREE_OF_A_KIND, "AAKQJ"},
+		{seven.THREE_OF_A_KIND, "AKQJJ"},
+		{seven.FULL_HOUSE, "AAKKJ"},
+		{seven.FULL_HOUSE, "AAKKK"},
+		{seven.FOUR_OF_A_KIND, "AAKJJ"},
+		{seven.FOUR_OF_A_KIND, "AAAAK"},
+		{seven.FIVE_OF_A_KIND, "AAAAA"},
+		{seven.FIVE_OF_A_KIND, "AJJJJ"},
+		{seven.FIVE_OF_A_KIND, "AAJJJ"},
+		{seven.FIVE_OF_A_KIND, "AAAJJ"},
+		{seven.FIVE_OF_A_KIND, "AAAAJ"},
+		{seven.FIVE_OF_A_KIND, "AAAAA"},
+	}
+
+	for i, td := range testData {
+		t.Run(fmt.Sprintf("Test %d - %s should be %s", i, td.hand, seven.StrengthName(td.strength)), func(t *testing.T) {
+			actual := seven.GetStrengthForWildJacks(td.hand)
+			assert.Equal(t, td.strength, actual)
+		})
+	}
+}
+
 func Test_ParseHands(t *testing.T) {
 	expected := []struct {
 		rank  int
@@ -42,4 +75,17 @@ func Test_ParseHands(t *testing.T) {
 		assert.Equal(t, e.cards, hands[i].Cards)
 		assert.Equal(t, e.bid, hands[i].Bid)
 	}
+}
+
+func Test_Total(t *testing.T) {
+	expected := 5905
+	seven.JacksAreWild = true
+
+	hands := seven.ParseHands(INPUT)
+
+	result := 0
+	for _, h := range hands {
+		result += h.Rank * h.Bid
+	}
+	assert.Equal(t, expected, result)
 }
