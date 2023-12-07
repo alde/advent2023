@@ -13,11 +13,11 @@ type Hand struct {
 	Cards    []string
 	Bid      int
 	Strength int
-	priority []string
+	priority []string // wish I could put this somewhere else, but I don't want to make my own sorting
 }
 type Hands []*Hand
 
-type CardParser struct {
+type Context struct {
 	Priority     []string
 	JacksAreWild bool
 }
@@ -70,6 +70,16 @@ func (h Hands) Less(i, j int) bool {
 	return false
 }
 
+func Max(seen map[string]int) int {
+	max := 0
+	for _, v := range seen {
+		if v > max {
+			max = v
+		}
+	}
+	return max
+}
+
 const (
 	FIVE_OF_A_KIND  = 7
 	FOUR_OF_A_KIND  = 6
@@ -80,23 +90,46 @@ const (
 	HIGH_CARD       = 1
 )
 
-func Max(seen map[string]int) int {
-	max := 0
-	for _, v := range seen {
-		if v > max {
-			max = v
+func StrengthName(i int) string {
+	switch i {
+	case HIGH_CARD:
+		return "HIGH_CARD"
+	case ONE_PAIR:
+		return "ONE_PAIR"
+	case TWO_PAIRS:
+		return "TWO_PAIRS"
+	case THREE_OF_A_KIND:
+		return "THREE_OF_A_KIND"
+	case FULL_HOUSE:
+		return "FULL_HOUSE"
+	case FOUR_OF_A_KIND:
+		return "FOUR_OF_A_KIND"
+	case FIVE_OF_A_KIND:
+		return "FIVE_OF_A_KIND"
+	}
+	return "unknown"
+}
+
+func CountCards(cards string) map[string]int {
+	seen := make(map[string]int)
+	for i := 0; i < len(cards); i++ {
+		r := string(cards[i])
+		_, ok := seen[r]
+		if !ok {
+			seen[r] = 1
+		} else {
+			seen[r] += 1
 		}
 	}
-	return max
+
+	return seen
 }
-func GetStrengthForWildJacks(cards string) (str int) {
-	seen := CountCards(cards)
+
+func GetStrengthForWildJacks(seen map[string]int) (str int) {
 	jacks, ok := seen["J"]
 	if !ok {
 		jacks = 0
 	}
-
-	// fmt.Printf("cards %s contains %d jacks who are wildcards\n", cards, jacks)
 
 	seenLength := len(seen)
 	if seenLength == 1 {
@@ -146,44 +179,7 @@ func GetStrengthForWildJacks(cards string) (str int) {
 	return HIGH_CARD
 }
 
-func CountCards(cards string) map[string]int {
-	seen := make(map[string]int)
-	for i := 0; i < len(cards); i++ {
-		r := string(cards[i])
-		_, ok := seen[r]
-		if !ok {
-			seen[r] = 1
-		} else {
-			seen[r] += 1
-		}
-	}
-
-	return seen
-}
-
-func StrengthName(i int) string {
-	switch i {
-	case HIGH_CARD:
-		return "HIGH_CARD"
-	case ONE_PAIR:
-		return "ONE_PAIR"
-	case TWO_PAIRS:
-		return "TWO_PAIRS"
-	case THREE_OF_A_KIND:
-		return "THREE_OF_A_KIND"
-	case FULL_HOUSE:
-		return "FULL_HOUSE"
-	case FOUR_OF_A_KIND:
-		return "FOUR_OF_A_KIND"
-	case FIVE_OF_A_KIND:
-		return "FIVE_OF_A_KIND"
-	}
-	return "unknown"
-}
-
-func GetNormalStrength(cards string) int {
-	seen := CountCards(cards)
-
+func GetNormalStrength(seen map[string]int) int {
 	seenLength := len(seen)
 	if seenLength == 1 {
 		return FIVE_OF_A_KIND
@@ -209,17 +205,16 @@ func GetNormalStrength(cards string) int {
 
 	return HIGH_CARD
 }
-func GetStrength(cards string, cardParser *CardParser) int {
-	str := -1
-	if cardParser.JacksAreWild {
-		str = GetStrengthForWildJacks(cards)
-	} else {
-		str = GetNormalStrength(cards)
+func GetStrength(cards string, context *Context) int {
+	seen := CountCards(cards)
+	if context.JacksAreWild {
+		return GetStrengthForWildJacks(seen)
 	}
-	return str
+	return GetNormalStrength(seen)
+
 }
 
-func ParseHands(input []string, cardParser *CardParser) []*Hand {
+func ParseHands(input []string, context *Context) []*Hand {
 	var hands Hands
 	for _, s := range input {
 		split := strings.Fields(s)
@@ -228,8 +223,8 @@ func ParseHands(input []string, cardParser *CardParser) []*Hand {
 		hands = append(hands, &Hand{
 			Cards:    cards,
 			Bid:      bid,
-			Strength: GetStrength(strings.Join(cards, ""), cardParser),
-			priority: cardParser.Priority,
+			Strength: GetStrength(strings.Join(cards, ""), context),
+			priority: context.Priority,
 		})
 	}
 
@@ -242,11 +237,11 @@ func ParseHands(input []string, cardParser *CardParser) []*Hand {
 }
 
 func PartOne(data []string) *shared.Result {
-	cardParser := &CardParser{
+	context := &Context{
 		Priority:     DefultPriority,
 		JacksAreWild: false,
 	}
-	hands := ParseHands(data, cardParser)
+	hands := ParseHands(data, context)
 	result := 0
 
 	for _, h := range hands {
@@ -256,12 +251,12 @@ func PartOne(data []string) *shared.Result {
 }
 
 func PartTwo(data []string) *shared.Result {
-	cardParser := &CardParser{
+	context := &Context{
 		Priority:     CardPrioJackWild,
 		JacksAreWild: true,
 	}
 
-	hands := ParseHands(data, cardParser)
+	hands := ParseHands(data, context)
 
 	result := 0
 	for _, h := range hands {

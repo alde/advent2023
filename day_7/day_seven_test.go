@@ -16,15 +16,23 @@ var INPUT = []string{
 	"QQQJA 483",
 }
 
-func Test_GetNormalStrength(t *testing.T) {
-	assert.Equal(t, seven.ONE_PAIR, seven.GetNormalStrength("32T3K"))
-	assert.Equal(t, seven.THREE_OF_A_KIND, seven.GetNormalStrength("T55J5"))
-	assert.Equal(t, seven.TWO_PAIRS, seven.GetNormalStrength("KK677"))
-	assert.Equal(t, seven.TWO_PAIRS, seven.GetNormalStrength("KTJJT"))
-	assert.Equal(t, seven.THREE_OF_A_KIND, seven.GetNormalStrength("QQQJA"))
+func Test_GetStrength_Normal(t *testing.T) {
+	context := seven.Context{
+		Priority:     []string{},
+		JacksAreWild: false,
+	}
+	assert.Equal(t, seven.ONE_PAIR, seven.GetStrength("32T3K", &context))
+	assert.Equal(t, seven.THREE_OF_A_KIND, seven.GetStrength("T55J5", &context))
+	assert.Equal(t, seven.TWO_PAIRS, seven.GetStrength("KK677", &context))
+	assert.Equal(t, seven.TWO_PAIRS, seven.GetStrength("KTJJT", &context))
+	assert.Equal(t, seven.THREE_OF_A_KIND, seven.GetStrength("QQQJA", &context))
 }
 
 func Test_GetStrengthForWildJacks(t *testing.T) {
+	context := &seven.Context{
+		Priority:     []string{},
+		JacksAreWild: true,
+	}
 	testData := []struct {
 		strength int
 		hand     string
@@ -50,7 +58,7 @@ func Test_GetStrengthForWildJacks(t *testing.T) {
 
 	for i, td := range testData {
 		t.Run(fmt.Sprintf("Test %d - %s should be %s", i, td.hand, seven.StrengthName(td.strength)), func(t *testing.T) {
-			actual := seven.GetStrengthForWildJacks(td.hand)
+			actual := seven.GetStrength(td.hand, context)
 			assert.Equal(t, td.strength, actual)
 		})
 	}
@@ -68,8 +76,9 @@ func Test_ParseHands(t *testing.T) {
 		{2, []string{"K", "T", "J", "J", "T"}, 220},
 		{1, []string{"3", "2", "T", "3", "K"}, 765},
 	}
-	parser := &seven.CardParser{
-		Priority: seven.DefultPriority,
+	parser := &seven.Context{
+		JacksAreWild: false,
+		Priority:     seven.DefultPriority,
 	}
 	hands := seven.ParseHands(INPUT, parser)
 
@@ -82,7 +91,7 @@ func Test_ParseHands(t *testing.T) {
 
 func Test_PartTwo(t *testing.T) {
 	expected := 5905
-	parser := &seven.CardParser{
+	parser := &seven.Context{
 		JacksAreWild: true,
 		Priority:     seven.CardPrioJackWild,
 	}
