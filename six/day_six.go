@@ -1,7 +1,7 @@
 package six
 
 import (
-	"math"
+	"strings"
 
 	"alde.nu/advent2023/shared"
 )
@@ -11,13 +11,11 @@ type Race struct {
 	RecordDistance int
 }
 
-func WaysToWin(race *Race) []int {
-	waysToWin := []int{}
-	// quarterRaceLength := race.RaceLength / 4
-	// fmt.Printf("check from %d to %d", quarterRaceLength, quarterRaceLength*3)
+func WaysToWin(race *Race) int {
+	waysToWin := 0
 	for pressTime := 0; pressTime < race.RaceLength; pressTime++ {
-		if distance := Launch(pressTime, race.RaceLength); distance > race.RecordDistance {
-			waysToWin = append(waysToWin, distance)
+		if Launch(pressTime, race.RaceLength) > race.RecordDistance {
+			waysToWin += 1
 		}
 	}
 
@@ -36,6 +34,15 @@ func ProcessRaces(input []string) []*Race {
 	return races
 }
 
+func ProcessAsSingleRace(input []string) *Race {
+	time := shared.DropWhitespaces(strings.Split(input[0], ":")[1])
+	distance := shared.DropWhitespaces(strings.Split(input[1], ":")[1])
+	return &Race{
+		RaceLength:     time,
+		RecordDistance: distance,
+	}
+}
+
 func Launch(pressTime int, raceLength int) int {
 	velocity := 0
 	if pressTime == 0 {
@@ -51,15 +58,14 @@ func PartOne(races []*Race) *shared.Result {
 	result := 1
 
 	for _, r := range races {
-		ways := WaysToWin(r)
-		result *= len(ways)
+		result *= WaysToWin(r)
 	}
 
 	return &shared.Result{Day: "Six", Task: "One", Value: result}
 }
 
-func PartTwo(input []string) *shared.Result {
-	result := math.MaxInt
+func PartTwo(race *Race) *shared.Result {
+	result := WaysToWin(race)
 
 	return &shared.Result{Day: "Six", Task: "Two", Value: result}
 }
@@ -69,5 +75,6 @@ func Run(input string) {
 	races := ProcessRaces(data)
 
 	shared.PrintResult(func() *shared.Result { return PartOne(races) })
-	// shared.PrintResult(func() *shared.Result { return PartTwo(data) })
+	singleRace := ProcessAsSingleRace(data)
+	shared.PrintResult(func() *shared.Result { return PartTwo(singleRace) })
 }

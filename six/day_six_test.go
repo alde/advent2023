@@ -25,6 +25,13 @@ func Test_ProcessRaces(t *testing.T) {
 	assert.Equal(t, 30, races[2].RaceLength)
 	assert.Equal(t, 200, races[2].RecordDistance)
 }
+
+func Test_ProcessAsSingleRace(t *testing.T) {
+	race := six.ProcessAsSingleRace(INPUT)
+
+	assert.Equal(t, 71530, race.RaceLength)
+	assert.Equal(t, 940200, race.RecordDistance)
+}
 func Test_ButtonPress(t *testing.T) {
 	testData := []struct {
 		pressTime        int
@@ -57,5 +64,11 @@ func Test_WaysToWin(t *testing.T) {
 	actual := six.WaysToWin(&six.Race{
 		RaceLength: 7, RecordDistance: 9,
 	})
-	assert.Equal(t, 4, len(actual))
+	assert.Equal(t, 4, actual)
+}
+
+func Test_WaysToWinPartTwo(t *testing.T) {
+	race := six.ProcessAsSingleRace(INPUT)
+	actual := six.WaysToWin(race)
+	assert.Equal(t, 71503, actual)
 }

@@ -17,7 +17,18 @@ func ConvertToNumSlice(s string) []int {
 	}
 	return res
 }
+func DropWhitespaces(s string) int {
+	storage := ""
+	for i := 0; i < len(s); i++ {
+		if s[i] == ' ' {
+			continue
+		}
+		storage += string(s[i])
+	}
 
+	num, _ := strconv.Atoi(storage)
+	return num
+}
 func ExtractNumbers(s string) []int {
 	var res = []int{}
 	for _, r := range s {
