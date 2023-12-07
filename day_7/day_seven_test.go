@@ -16,12 +16,12 @@ var INPUT = []string{
 	"QQQJA 483",
 }
 
-func Test_GetStrength(t *testing.T) {
-	assert.Equal(t, seven.ONE_PAIR, seven.GetStrength("32T3K"))
-	assert.Equal(t, seven.THREE_OF_A_KIND, seven.GetStrength("T55J5"))
-	assert.Equal(t, seven.TWO_PAIRS, seven.GetStrength("KK677"))
-	assert.Equal(t, seven.TWO_PAIRS, seven.GetStrength("KTJJT"))
-	assert.Equal(t, seven.THREE_OF_A_KIND, seven.GetStrength("QQQJA"))
+func Test_GetNormalStrength(t *testing.T) {
+	assert.Equal(t, seven.ONE_PAIR, seven.GetNormalStrength("32T3K"))
+	assert.Equal(t, seven.THREE_OF_A_KIND, seven.GetNormalStrength("T55J5"))
+	assert.Equal(t, seven.TWO_PAIRS, seven.GetNormalStrength("KK677"))
+	assert.Equal(t, seven.TWO_PAIRS, seven.GetNormalStrength("KTJJT"))
+	assert.Equal(t, seven.THREE_OF_A_KIND, seven.GetNormalStrength("QQQJA"))
 }
 
 func Test_GetStrengthForWildJacks(t *testing.T) {
@@ -68,7 +68,10 @@ func Test_ParseHands(t *testing.T) {
 		{2, []string{"K", "T", "J", "J", "T"}, 220},
 		{1, []string{"3", "2", "T", "3", "K"}, 765},
 	}
-	hands := seven.ParseHands(INPUT)
+	parser := &seven.CardParser{
+		Priority: seven.DefultPriority,
+	}
+	hands := seven.ParseHands(INPUT, parser)
 
 	for i, e := range expected {
 		assert.Equal(t, e.rank, hands[i].Rank)
@@ -77,11 +80,14 @@ func Test_ParseHands(t *testing.T) {
 	}
 }
 
-func Test_Total(t *testing.T) {
+func Test_PartTwo(t *testing.T) {
 	expected := 5905
-	seven.JacksAreWild = true
+	parser := &seven.CardParser{
+		JacksAreWild: true,
+		Priority:     seven.CardPrioJackWild,
+	}
 
-	hands := seven.ParseHands(INPUT)
+	hands := seven.ParseHands(INPUT, parser)
 
 	result := 0
 	for _, h := range hands {

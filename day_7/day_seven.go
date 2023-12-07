@@ -13,24 +13,27 @@ type Hand struct {
 	Cards    []string
 	Bid      int
 	Strength int
+	priority []string
 }
 type Hands []*Hand
 
-var defultPriority = []string{
+type CardParser struct {
+	Priority     []string
+	JacksAreWild bool
+}
+
+var DefultPriority = []string{
 	"A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2",
 }
-var cardPrioJackWild = []string{
+var CardPrioJackWild = []string{
 	"A", "K", "Q", "T", "9", "8", "7", "6", "5", "4", "3", "2", "J",
 }
-var cardPriority = defultPriority
 
-var JacksAreWild = false
-
-func CompareCards(left string, right string) bool {
+func CompareCards(left string, right string, priority []string) bool {
 	lp := -1
 	rp := -1
 	// this can be optimized
-	for i, c := range cardPriority {
+	for i, c := range priority {
 		if c == left {
 			lp = i
 		}
@@ -62,7 +65,7 @@ func (h Hands) Less(i, j int) bool {
 		if h[i].Cards[n] == h[j].Cards[n] {
 			continue // if they are the same, continue to the next card in each hand
 		}
-		return CompareCards(h[i].Cards[n], h[j].Cards[n])
+		return CompareCards(h[i].Cards[n], h[j].Cards[n], h[i].priority)
 	}
 	return false
 }
@@ -178,7 +181,7 @@ func StrengthName(i int) string {
 	return "unknown"
 }
 
-func getNormalStrength(cards string) int {
+func GetNormalStrength(cards string) int {
 	seen := CountCards(cards)
 
 	seenLength := len(seen)
@@ -206,18 +209,18 @@ func getNormalStrength(cards string) int {
 
 	return HIGH_CARD
 }
-func GetStrength(cards string) int {
+func GetStrength(cards string, cardParser *CardParser) int {
 	str := -1
-	if JacksAreWild {
+	if cardParser.JacksAreWild {
 		str = GetStrengthForWildJacks(cards)
 	} else {
-		str = getNormalStrength(cards)
+		str = GetNormalStrength(cards)
 	}
 	return str
 }
 
-func ParseHands(input []string) []*Hand {
-	hands := []*Hand{}
+func ParseHands(input []string, cardParser *CardParser) []*Hand {
+	var hands Hands
 	for _, s := range input {
 		split := strings.Fields(s)
 		cards := strings.Split(split[0], "")
@@ -225,11 +228,12 @@ func ParseHands(input []string) []*Hand {
 		hands = append(hands, &Hand{
 			Cards:    cards,
 			Bid:      bid,
-			Strength: GetStrength(strings.Join(cards, "")),
+			Strength: GetStrength(strings.Join(cards, ""), cardParser),
+			priority: cardParser.Priority,
 		})
 	}
 
-	sort.Sort(Hands(hands))
+	sort.Sort(hands)
 	for i := 0; i < len(hands); i++ {
 		hands[i].Rank = len(hands) - i
 	}
@@ -238,8 +242,11 @@ func ParseHands(input []string) []*Hand {
 }
 
 func PartOne(data []string) *shared.Result {
-	JacksAreWild = false
-	hands := ParseHands(data)
+	cardParser := &CardParser{
+		Priority:     DefultPriority,
+		JacksAreWild: false,
+	}
+	hands := ParseHands(data, cardParser)
 	result := 0
 
 	for _, h := range hands {
@@ -249,10 +256,12 @@ func PartOne(data []string) *shared.Result {
 }
 
 func PartTwo(data []string) *shared.Result {
-	JacksAreWild = true
-	cardPriority = cardPrioJackWild
+	cardParser := &CardParser{
+		Priority:     CardPrioJackWild,
+		JacksAreWild: true,
+	}
 
-	hands := ParseHands(data)
+	hands := ParseHands(data, cardParser)
 
 	result := 0
 	for _, h := range hands {
