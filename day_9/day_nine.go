@@ -36,7 +36,7 @@ func BuildHistory(nums []int) [][]int {
 	return res
 }
 
-func Extrapolate(history [][]int) [][]int {
+func ExtrapolateFuture(history [][]int) [][]int {
 	for n := len(history) - 1; n >= 0; n-- {
 		entry := history[n]
 		newValue := 0
@@ -51,13 +51,28 @@ func Extrapolate(history [][]int) [][]int {
 	return history
 }
 
+func ExtrapolatePast(history [][]int) [][]int {
+	for n := len(history) - 1; n >= 0; n-- {
+		entry := history[n]
+		newValue := 0
+		if n < len(history)-1 {
+			prevRow := history[n+1]
+			newValue = entry[0] - prevRow[0]
+		}
+
+		entry = append([]int{newValue}, entry...)
+		history[n] = entry
+	}
+	return history
+}
+
 func PartOne(data []string) *shared.Result {
 	result := 0
 
 	for _, row := range data {
 		nums := shared.ConvertToNumSlice(row)
 		history := BuildHistory(nums)
-		future := Extrapolate(history)[0]
+		future := ExtrapolateFuture(history)[0]
 
 		result += future[len(future)-1]
 	}
@@ -67,6 +82,15 @@ func PartOne(data []string) *shared.Result {
 
 func PartTwo(data []string) *shared.Result {
 	result := 0
+
+	for _, row := range data {
+		nums := shared.ConvertToNumSlice(row)
+		history := BuildHistory(nums)
+		past := ExtrapolatePast(history)[0]
+
+		result += past[0]
+	}
+
 	return &shared.Result{Day: "nine", Task: "Two", Value: result}
 }
 
