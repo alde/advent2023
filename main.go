@@ -14,6 +14,7 @@ import (
 	six "alde.nu/advent2023/day_6"
 	seven "alde.nu/advent2023/day_7"
 	eight "alde.nu/advent2023/day_8"
+	nine "alde.nu/advent2023/day_9"
 	"alde.nu/advent2023/shared"
 )
 
@@ -31,6 +32,7 @@ func main() {
 		"six":   six.Run,
 		"seven": seven.Run,
 		"eight": eight.Run,
+		"nine":  nine.Run,
 	}
 
 	if *target == "all" {
