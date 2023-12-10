@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	one "alde.nu/advent2023/day_1"
+	ten "alde.nu/advent2023/day_10"
 	two "alde.nu/advent2023/day_2"
 	three "alde.nu/advent2023/day_3"
 	four "alde.nu/advent2023/day_4"
@@ -33,6 +34,7 @@ func main() {
 		"seven": seven.Run,
 		"eight": eight.Run,
 		"nine":  nine.Run,
+		"ten":   ten.Run,
 	}
 
 	if *target == "all" {
