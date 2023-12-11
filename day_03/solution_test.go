@@ -1,10 +1,10 @@
-package three_test
+package day_03_test
 
 import (
 	"fmt"
 	"testing"
 
-	three "alde.nu/advent2023/day_3"
+	"alde.nu/advent2023/day_03"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -22,12 +22,12 @@ var INPUT = []string{
 }
 
 func Test_PartOne(t *testing.T) {
-	res := three.PartOne(INPUT)
+	res := day_03.PartOne(INPUT)
 
 	assert.Equal(t, 4361, res.Value)
 }
 func Test_PartTwo(t *testing.T) {
-	res := three.PartTwo(INPUT)
+	res := day_03.PartTwo(INPUT)
 
 	assert.Equal(t, 467835, res.Value)
 }
@@ -43,11 +43,11 @@ func Test_CheckMatrix(t *testing.T) {
 
 	for _, td := range testData {
 		t.Run(fmt.Sprintf("test for %v", td.inputString), func(t *testing.T) {
-			assert.Equal(t, td.expected, three.CheckMatrix(td.inputString))
+			assert.Equal(t, td.expected, day_03.CheckMatrix(td.inputString))
 		})
 	}
 
-	assert.Equal(t, []int{467, 35, 633, 617, 592, 755, 664, 598}, three.CheckMatrix(INPUT))
+	assert.Equal(t, []int{467, 35, 633, 617, 592, 755, 664, 598}, day_03.CheckMatrix(INPUT))
 }
 
 func Test_CheckForGears(t *testing.T) {
@@ -60,11 +60,11 @@ func Test_CheckForGears(t *testing.T) {
 
 	for _, td := range testData {
 		t.Run(fmt.Sprintf("test for %v", td.inputString), func(t *testing.T) {
-			assert.Equal(t, td.expected, three.CheckForGrears(td.inputString))
+			assert.Equal(t, td.expected, day_03.CheckForGrears(td.inputString))
 		})
 	}
 
-	assert.Equal(t, []int{16345, 451490}, three.CheckForGrears(INPUT))
+	assert.Equal(t, []int{16345, 451490}, day_03.CheckForGrears(INPUT))
 }
 
 func Test_IsDigit(t *testing.T) {
@@ -89,7 +89,7 @@ func Test_IsDigit(t *testing.T) {
 
 	for _, td := range testData {
 		t.Run(fmt.Sprintf("test for %v", td.input), func(t *testing.T) {
-			assert.Equal(t, td.expected, three.IsDigit(td.input[0]))
+			assert.Equal(t, td.expected, day_03.IsDigit(td.input[0]))
 		})
 	}
 }

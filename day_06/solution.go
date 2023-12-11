@@ -1,4 +1,4 @@
-package six
+package day_06
 
 import (
 	"strings"

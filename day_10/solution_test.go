@@ -1,7 +1,7 @@
-package ten_test
+package day_10_test
 
 import (
-	ten "alde.nu/advent2023/day_10"
+	"alde.nu/advent2023/day_10"
 
 	"testing"
 
@@ -25,10 +25,10 @@ var I2 = []string{
 }
 
 func Test_PartOne(t *testing.T) {
-	actual := ten.PartOne(INPUT)
+	actual := day_10.PartOne(INPUT)
 	assert.Equal(t, 8, actual.Value)
 
-	actual = ten.PartOne(I2)
+	actual = day_10.PartOne(I2)
 	assert.Equal(t, 4, actual.Value)
 }
 
@@ -46,6 +46,6 @@ var I3 = []string{
 }
 
 func Test_PartTwo(t *testing.T) {
-	actual := ten.PartTwo(I3)
+	actual := day_10.PartTwo(I3)
 	assert.Equal(t, 10, actual.Value)
 }

@@ -1,9 +1,9 @@
-package eight_test
+package day_08_test
 
 import (
 	"testing"
 
-	eight "alde.nu/advent2023/day_8"
+	"alde.nu/advent2023/day_08"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -20,7 +20,7 @@ var INPUT = []string{
 }
 
 func Test_GetNodes(t *testing.T) {
-	actual := eight.GetNodes(INPUT[1:])
+	actual := day_08.GetNodes(INPUT[1:])
 	assert.Equal(t, "BBB", actual["AAA"].Left)
 	assert.Equal(t, "CCC", actual["AAA"].Right)
 
@@ -29,17 +29,17 @@ func Test_GetNodes(t *testing.T) {
 }
 
 func Test_GetDirections(t *testing.T) {
-	actual := eight.GetDirections(INPUT[0])
+	actual := day_08.GetDirections(INPUT[0])
 	assert.Equal(t, 'R', actual.Pop())
 	assert.Equal(t, 'L', actual.Pop())
 	assert.Equal(t, 'R', actual.Pop())
 }
 
 func Test_PartOne(t *testing.T) {
-	actual := eight.PartOne(eight.GetDirections(INPUT[0]), eight.GetNodes(INPUT[1:]))
+	actual := day_08.PartOne(day_08.GetDirections(INPUT[0]), day_08.GetNodes(INPUT[1:]))
 	assert.Equal(t, 2, actual.Value)
 
-	actual = eight.PartOne(eight.GetDirections("LLR"), eight.GetNodes([]string{
+	actual = day_08.PartOne(day_08.GetDirections("LLR"), day_08.GetNodes([]string{
 		"AAA = (BBB, BBB)",
 		"BBB = (AAA, ZZZ)",
 		"ZZZ = (ZZZ, ZZZ)",
@@ -61,12 +61,12 @@ var secondInput = []string{
 }
 
 func Test_GetStartingPositions(t *testing.T) {
-	nodes := eight.GetNodes(secondInput[1:])
-	actual := eight.GetStartingPositions(nodes)
+	nodes := day_08.GetNodes(secondInput[1:])
+	actual := day_08.GetStartingPositions(nodes)
 	assert.Equal(t, []string{"11A", "22A"}, actual)
 }
 
 func Test_PartTwo(t *testing.T) {
-	actual := eight.TraverseMultiple([]string{"11A", "22A"}, eight.GetDirections(secondInput[0]), eight.GetNodes(secondInput[1:]))
+	actual := day_08.TraverseMultiple([]string{"11A", "22A"}, day_08.GetDirections(secondInput[0]), day_08.GetNodes(secondInput[1:]))
 	assert.Equal(t, 6, actual)
 }

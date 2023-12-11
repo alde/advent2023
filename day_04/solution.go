@@ -1,4 +1,4 @@
-package four
+package day_04
 
 import (
 	"strconv"

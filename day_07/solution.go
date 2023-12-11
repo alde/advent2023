@@ -1,4 +1,4 @@
-package seven
+package day_07
 
 import (
 	"sort"

@@ -1,9 +1,9 @@
-package nine_test
+package day_09_test
 
 import (
 	"fmt"
 
-	nine "alde.nu/advent2023/day_9"
+	"alde.nu/advent2023/day_09"
 
 	"testing"
 
@@ -15,17 +15,17 @@ var testDataRowOne = []int{
 }
 
 func Test_CalculateDifferences(t *testing.T) {
-	actual := nine.CaluclateDifferences(testDataRowOne)
+	actual := day_09.CaluclateDifferences(testDataRowOne)
 	gen1 := []int{3, 3, 3, 3, 3}
 	assert.Equal(t, gen1, actual)
 
-	actual = nine.CaluclateDifferences(gen1)
+	actual = day_09.CaluclateDifferences(gen1)
 	gen2 := []int{0, 0, 0, 0}
 	assert.Equal(t, gen2, actual)
 }
 
 func Test_BuildHistory(t *testing.T) {
-	actual := nine.BuildHistory(testDataRowOne)
+	actual := day_09.BuildHistory(testDataRowOne)
 	expect := [][]int{
 		{0, 3, 6, 9, 12, 15},
 		{3, 3, 3, 3, 3},
@@ -85,7 +85,7 @@ func Test_ExtrapolateFuture(t *testing.T) {
 	}
 	for i, td := range testData {
 		t.Run(fmt.Sprintf("test %d", i), func(t *testing.T) {
-			actual := nine.ExtrapolateFuture(td.input)
+			actual := day_09.ExtrapolateFuture(td.input)
 			assert.Equal(t, td.expected, actual)
 		})
 	}
@@ -141,7 +141,7 @@ func Test_ExtrapolatePast(t *testing.T) {
 	}
 	for i, td := range testData {
 		t.Run(fmt.Sprintf("test %d", i), func(t *testing.T) {
-			actual := nine.ExtrapolatePast(td.input)
+			actual := day_09.ExtrapolatePast(td.input)
 			assert.Equal(t, td.expected, actual)
 		})
 	}
@@ -154,11 +154,11 @@ var input = []string{
 }
 
 func Test_PartOne(t *testing.T) {
-	actual := nine.PartOne(input)
+	actual := day_09.PartOne(input)
 	assert.Equal(t, 114, actual.Value)
 }
 
 func Test_PartTwo(t *testing.T) {
-	actual := nine.PartTwo(input)
+	actual := day_09.PartTwo(input)
 	assert.Equal(t, 2, actual.Value)
 }

@@ -1,4 +1,4 @@
-package ten
+package day_10
 
 import (
 	"alde.nu/advent2023/shared"

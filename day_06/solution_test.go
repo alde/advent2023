@@ -1,10 +1,10 @@
-package six_test
+package day_06_test
 
 import (
 	"fmt"
 	"testing"
 
-	six "alde.nu/advent2023/day_6"
+	"alde.nu/advent2023/day_06"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -14,7 +14,7 @@ var INPUT = []string{
 }
 
 func Test_ProcessRaces(t *testing.T) {
-	races := six.ProcessRaces(INPUT)
+	races := day_06.ProcessRaces(INPUT)
 
 	assert.Equal(t, 7, races[0].RaceLength)
 	assert.Equal(t, 9, races[0].RecordDistance)
@@ -27,7 +27,7 @@ func Test_ProcessRaces(t *testing.T) {
 }
 
 func Test_ProcessAsSingleRace(t *testing.T) {
-	race := six.ProcessAsSingleRace(INPUT)
+	race := day_06.ProcessAsSingleRace(INPUT)
 
 	assert.Equal(t, 71530, race.RaceLength)
 	assert.Equal(t, 940200, race.RecordDistance)
@@ -54,21 +54,21 @@ func Test_ButtonPress(t *testing.T) {
 
 	for _, td := range testData {
 		t.Run(fmt.Sprintf("test pressing %d ms in a %d length race", td.pressTime, td.raceLength), func(t *testing.T) {
-			actual := six.Launch(td.pressTime, td.raceLength)
+			actual := day_06.Launch(td.pressTime, td.raceLength)
 			assert.Equal(t, td.expectedDistance, actual)
 		})
 	}
 }
 
 func Test_WaysToWin(t *testing.T) {
-	actual := six.WaysToWin(&six.Race{
+	actual := day_06.WaysToWin(&day_06.Race{
 		RaceLength: 7, RecordDistance: 9,
 	})
 	assert.Equal(t, 4, actual)
 }
 
 func Test_WaysToWinPartTwo(t *testing.T) {
-	race := six.ProcessAsSingleRace(INPUT)
-	actual := six.WaysToWin(race)
+	race := day_06.ProcessAsSingleRace(INPUT)
+	actual := day_06.WaysToWin(race)
 	assert.Equal(t, 71503, actual)
 }

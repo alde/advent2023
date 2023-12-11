@@ -1,9 +1,9 @@
-package four_test
+package day_04_test
 
 import (
 	"testing"
 
-	four "alde.nu/advent2023/day_4"
+	"alde.nu/advent2023/day_04"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -17,12 +17,12 @@ var INPUT = []string{
 }
 
 func Test_PartOne(t *testing.T) {
-	res := four.PartOne(INPUT)
+	res := day_04.PartOne(INPUT)
 
 	assert.Equal(t, 13, res.Value)
 }
 func Test_PartTwo(t *testing.T) {
-	res := four.PartTwo(INPUT)
+	res := day_04.PartTwo(INPUT)
 
 	assert.Equal(t, 30, res.Value)
 }

@@ -1,10 +1,10 @@
-package five_test
+package day_05_test
 
 import (
 	"fmt"
 	"testing"
 
-	five "alde.nu/advent2023/day_5"
+	"alde.nu/advent2023/day_05"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -49,7 +49,7 @@ func Test_MakeMap(t *testing.T) {
 		"50 98 2",
 		"52 50 48",
 	}
-	actual := five.MakeMap(input)
+	actual := day_05.MakeMap(input)
 	assert.Equal(t, 1, actual.Get(1))
 	assert.Equal(t, 50, actual.Get(98))
 	assert.Equal(t, 51, actual.Get(99))
@@ -59,7 +59,7 @@ func Test_MakeMap(t *testing.T) {
 }
 
 func Test_ProcessInput(t *testing.T) {
-	actual := five.ProcessInput(INPUT)
+	actual := day_05.ProcessInput(INPUT)
 
 	assert.Equal(t, actual.SeedList, []int{79, 14, 55, 13})
 
@@ -82,9 +82,9 @@ func Test_ProcessInput(t *testing.T) {
 }
 
 func Test_Reverse(t *testing.T) {
-	actual := five.ProcessInput(INPUT)
+	actual := day_05.ProcessInput(INPUT)
 
-	assert.Equal(t, actual.SeedListRange, []five.SeedRange{{79, 14}, {55, 13}})
+	assert.Equal(t, actual.SeedListRange, []day_05.SeedRange{{79, 14}, {55, 13}})
 
 	testData := []struct {
 		actual   int
@@ -105,15 +105,15 @@ func Test_Reverse(t *testing.T) {
 }
 
 func Test_PartOne(t *testing.T) {
-	almanac := five.ProcessInput(INPUT)
-	res := five.PartOne(almanac)
+	almanac := day_05.ProcessInput(INPUT)
+	res := day_05.PartOne(almanac)
 
 	assert.Equal(t, 35, res.Value)
 }
 
 func Test_PartTwo(t *testing.T) {
-	almanac := five.ProcessInput(INPUT)
-	res := five.PartTwo(almanac)
+	almanac := day_05.ProcessInput(INPUT)
+	res := day_05.PartTwo(almanac)
 
 	assert.Equal(t, 46, res.Value)
 }

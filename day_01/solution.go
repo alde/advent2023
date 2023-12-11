@@ -1,4 +1,4 @@
-package one
+package day_01
 
 import (
 	"alde.nu/advent2023/shared"

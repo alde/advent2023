@@ -1,4 +1,4 @@
-package eight
+package day_08
 
 import (
 	"fmt"
@@ -113,7 +113,7 @@ func TraverseMultiple(currents []string, directions *shared.CircleList[rune], no
 
 func GetStartingPositions(nodes map[string]*Direction) []string {
 	res := []string{}
-	for k, _ := range nodes {
+	for k := range nodes {
 		if strings.HasSuffix(k, "A") {
 			res = append(res, k)
 		}

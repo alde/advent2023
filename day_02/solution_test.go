@@ -1,9 +1,9 @@
-package two_test
+package day_02_test
 
 import (
 	"testing"
 
-	two "alde.nu/advent2023/day_2"
+	"alde.nu/advent2023/day_02"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -17,14 +17,14 @@ var INPUT = []string{
 
 func Test_PartOne(t *testing.T) {
 
-	res := two.PartOne(INPUT, &two.Cubes{Red: 12, Green: 13, Blue: 14})
+	res := day_02.PartOne(INPUT, &day_02.Cubes{Red: 12, Green: 13, Blue: 14})
 
 	assert.Equal(t, 8, res.Value)
 }
 
 func Test_PartTwo(t *testing.T) {
 
-	res := two.PartTwo(INPUT)
+	res := day_02.PartTwo(INPUT)
 
 	assert.Equal(t, 2286, res.Value)
 }

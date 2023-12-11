@@ -6,16 +6,16 @@ import (
 	"os"
 	"strings"
 
-	one "alde.nu/advent2023/day_1"
-	ten "alde.nu/advent2023/day_10"
-	two "alde.nu/advent2023/day_2"
-	three "alde.nu/advent2023/day_3"
-	four "alde.nu/advent2023/day_4"
-	five "alde.nu/advent2023/day_5"
-	six "alde.nu/advent2023/day_6"
-	seven "alde.nu/advent2023/day_7"
-	eight "alde.nu/advent2023/day_8"
-	nine "alde.nu/advent2023/day_9"
+	"alde.nu/advent2023/day_01"
+	"alde.nu/advent2023/day_02"
+	"alde.nu/advent2023/day_03"
+	"alde.nu/advent2023/day_04"
+	"alde.nu/advent2023/day_05"
+	"alde.nu/advent2023/day_06"
+	"alde.nu/advent2023/day_07"
+	"alde.nu/advent2023/day_08"
+	"alde.nu/advent2023/day_09"
+	"alde.nu/advent2023/day_10"
 	"alde.nu/advent2023/shared"
 )
 
@@ -25,16 +25,17 @@ func main() {
 	flag.Parse()
 
 	days := map[string]func(string){
-		"one":   one.Run,
-		"two":   two.Run,
-		"three": three.Run,
-		"four":  four.Run,
-		"five":  five.Run,
-		"six":   six.Run,
-		"seven": seven.Run,
-		"eight": eight.Run,
-		"nine":  nine.Run,
-		"ten":   ten.Run,
+		"one":   day_01.Run,
+		"two":   day_02.Run,
+		"three": day_03.Run,
+		"four":  day_04.Run,
+		"five":  day_05.Run,
+		"six":   day_06.Run,
+		"seven": day_07.Run,
+		"eight": day_08.Run,
+		"nine":  day_09.Run,
+		"ten":   day_10.Run,
+		// "eleven": day_11.Run,
 	}
 
 	if *target == "all" {
