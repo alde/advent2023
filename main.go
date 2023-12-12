@@ -16,6 +16,7 @@ import (
 	"alde.nu/advent2023/day_08"
 	"alde.nu/advent2023/day_09"
 	"alde.nu/advent2023/day_10"
+	"alde.nu/advent2023/day_11"
 	"alde.nu/advent2023/shared"
 )
 
@@ -25,17 +26,17 @@ func main() {
 	flag.Parse()
 
 	days := map[string]func(string){
-		"one":   day_01.Run,
-		"two":   day_02.Run,
-		"three": day_03.Run,
-		"four":  day_04.Run,
-		"five":  day_05.Run,
-		"six":   day_06.Run,
-		"seven": day_07.Run,
-		"eight": day_08.Run,
-		"nine":  day_09.Run,
-		"ten":   day_10.Run,
-		// "eleven": day_11.Run,
+		"one":    day_01.Run,
+		"two":    day_02.Run,
+		"three":  day_03.Run,
+		"four":   day_04.Run,
+		"five":   day_05.Run,
+		"six":    day_06.Run,
+		"seven":  day_07.Run,
+		"eight":  day_08.Run,
+		"nine":   day_09.Run,
+		"ten":    day_10.Run,
+		"eleven": day_11.Run,
 	}
 
 	if *target == "all" {
