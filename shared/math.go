@@ -19,3 +19,25 @@ func LeastCommonMultiple(nums []int) int {
 	}
 	return result
 }
+
+func Abs(i int) int {
+	if i < 0 {
+		return -i
+	}
+	return i
+}
+
+func MinMax(a, b int) (int, int) {
+	if a > b {
+		return b, a
+	}
+	return a, b
+}
+
+func Sum(nums []int) int {
+	res := 0
+	for _, n := range nums {
+		res += n
+	}
+	return res
+}

@@ -101,3 +101,12 @@ func MergeNumbers(ints []int) int {
 	response, _ := strconv.Atoi(res)
 	return response
 }
+
+func Contains[T comparable](s []T, e T) bool {
+	for _, v := range s {
+		if v == e {
+			return true
+		}
+	}
+	return false
+}
