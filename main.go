@@ -17,6 +17,7 @@ import (
 	"alde.nu/advent2023/day_09"
 	"alde.nu/advent2023/day_10"
 	"alde.nu/advent2023/day_11"
+	"alde.nu/advent2023/day_12"
 	"alde.nu/advent2023/shared"
 )
 
@@ -37,6 +38,7 @@ func main() {
 		"nine":   day_09.Run,
 		"ten":    day_10.Run,
 		"eleven": day_11.Run,
+		"twelve": day_12.Run,
 	}
 
 	if *target == "all" {
