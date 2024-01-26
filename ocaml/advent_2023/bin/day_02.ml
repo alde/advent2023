@@ -39,24 +39,20 @@ let to_rgb lst =
 ;;
 
 let process_round_part_one round =
-  let dice =
-    round
-    |> String.split_on_char ','
-    |> List.map @@ String.split_on_char ' '
-    |> List.map (fun l -> last l, List.nth l 1 |> int_of_string)
-  in
-  dice |> List.map (fun (color, value) -> max_dice color >= value) |> all
+  round
+  |> String.split_on_char ','
+  |> List.map @@ String.split_on_char ' '
+  |> List.map (fun l -> last l, List.nth l 1 |> int_of_string)
+  |> List.map (fun (color, value) -> max_dice color >= value)
+  |> all
 ;;
 
 let process_round_part_two round =
-  let dice =
-    round
-    |> String.split_on_char ','
-    |> List.map @@ String.split_on_char ' '
-    |> List.map (fun l -> last l, List.nth l 1 |> int_of_string)
-  in
-  let count = dice |> to_rgb in
-  count
+  round
+  |> String.split_on_char ','
+  |> List.map @@ String.split_on_char ' '
+  |> List.map (fun l -> last l, List.nth l 1 |> int_of_string)
+  |> to_rgb
 ;;
 
 let extract_game_number line =
