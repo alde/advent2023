@@ -6,8 +6,17 @@ let rec printlines data =
     printlines tl
 ;;
 
-let print_tuple (a, b, c) = Printf.printf "(%d, %d, %d)\n" a b c
-let print_2_tuple (a, b) = Printf.printf "(%s, %d)\n" a b
+let first l =
+  match l with
+  | [] -> failwith "empty list"
+  | h :: _ -> h
+;;
+
+let last l =
+  match List.rev l with
+  | [] -> failwith "empty list"
+  | h :: _ -> h
+;;
 
 let read_lines file =
   let contents = In_channel.with_open_bin file In_channel.input_all in

@@ -1,14 +1,4 @@
-let first l =
-  match l with
-  | [] -> failwith "empty list"
-  | h :: _ -> h
-;;
-
-let last l =
-  match List.rev l with
-  | [] -> failwith "empty list"
-  | h :: _ -> h
-;;
+open Utils
 
 let max_dice color =
   match color with
@@ -94,7 +84,7 @@ let parse_game_part_two line =
 ;;
 
 let solve input_file =
-  let input = Utils.read_lines input_file in
+  let input = read_lines input_file in
   input
   |> List.map @@ parse_game
   |> List.fold_left ( + ) 0
