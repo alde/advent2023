@@ -31,8 +31,9 @@ let to_rgb lst =
 let process_round_part_one round =
   round
   |> String.split_on_char ','
+  |> List.map @@ String.trim
   |> List.map @@ String.split_on_char ' '
-  |> List.map (fun l -> last l, List.nth l 1 |> int_of_string)
+  |> List.map (fun l -> last l, first l |> int_of_string)
   |> List.map (fun (color, value) -> max_dice color >= value)
   |> all
 ;;
